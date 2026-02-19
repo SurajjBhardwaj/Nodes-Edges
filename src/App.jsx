@@ -9,15 +9,11 @@ import {
   Handle,
   Position,
 } from "@xyflow/react";
-
 import "@xyflow/react/dist/style.css";
-import "@xyflow/react/dist/style.css";
-import { debounce } from "./useDebounce";
 
 const nodeTypes = {
   default: DefaultNode,
 };
-
 const initialNodes = [
   { id: "n1", position: { x: 0, y: 0 }, data: { label: "Node 1" } },
   { id: "n2", position: { x: 0, y: 100 }, data: { label: "Node 2" } },
@@ -30,90 +26,92 @@ export default function App() {
     nodes: initialNodes,
     edges: initialEdges,
   });
+
   const editorRef = useRef(null);
-  const debouncedRef = useRef(null);
+  const sourceRef = useRef("canvas");
 
-  useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.innerText = JSON.stringify(
-        { nodes: NodeConfigJson.nodes, edges: NodeConfigJson.edges },
-        null,
-        2,
-      );
-    }
-  }, [NodeConfigJson]); // ONLY once
+  const handleJsonEdit = (text) => {
+    try {
+      const parsed = JSON.parse(text);
+      sourceRef.current = "editor";
 
-  const handleConfigChange = (key, value) => {
-    switch (key) {
-      case "nodes":
-        setNodeConfigJson((prev) => ({ ...prev, nodes: value }));
-        break;
-
-      case "edges":
-        setNodeConfigJson((prev) => ({ ...prev, edges: value }));
-        break;
-      default:
-        break;
+      setNodeConfigJson({
+        nodes: parsed.nodes ?? [],
+        edges: parsed.edges ?? [],
+      });
+    } catch {
+      // ignore invalid JSON
     }
   };
 
-  const onNodesChange = useCallback(
-    (changes) => {
-      // setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-      // handleConfigChange("nodes", applyNodeChanges(changes, nodes)),
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerText = JSON.stringify(NodeConfigJson, null, 2);
+    }
+  }, []);
 
-      return setNodeConfigJson((prev) => ({
-        ...prev,
-        nodes: applyNodeChanges(changes, prev.nodes),
-      }));
-    },
+  useEffect(() => {
+    if (!editorRef.current) return;
 
-    [],
-  );
+    const observer = new MutationObserver(() => {
+      if (sourceRef.current === "canvas") return;
+      handleJsonEdit(editorRef.current.innerText);
+    });
 
-  const onEdgesChange = useCallback(
-    (changes) =>
-      setNodeConfigJson((prev) => ({
-        ...prev,
-        edges: applyEdgeChanges(changes, prev.edges),
-      })),
-    [],
-  );
+    observer.observe(editorRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (sourceRef.current !== "canvas") return;
+    if (!editorRef.current) return;
+
+    editorRef.current.innerText = JSON.stringify(NodeConfigJson, null, 2);
+  }, [NodeConfigJson]);
+
+  const onNodesChange = useCallback((changes) => {
+    sourceRef.current = "canvas";
+    setNodeConfigJson((prev) => ({
+      ...prev,
+      nodes: applyNodeChanges(changes, prev.nodes),
+    }));
+  }, []);
+
+  const onEdgesChange = useCallback((changes) => {
+    sourceRef.current = "canvas";
+    setNodeConfigJson((prev) => ({
+      ...prev,
+      edges: applyEdgeChanges(changes, prev.edges),
+    }));
+  }, []);
+
   const onConnect = useCallback((params) => {
-    // setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot));
+    sourceRef.current = "canvas";
     setNodeConfigJson((prev) => ({
       ...prev,
       edges: addEdge(params, prev.edges),
     }));
   }, []);
 
-  const handleAddNode = useCallback(() => {
-    const newNode = {
-      id: `n${NodeConfigJson.nodes.length + 1}`,
-      position: { x: Math.random() * 100, y: Math.random() * 100 },
-      data: { label: `Node ${NodeConfigJson.nodes.length + 1}` },
-    };
-    // setNodes((nodesSnapshot) => [...nodesSnapshot, newNode]);
+  const handleAddNode = () => {
+    sourceRef.current = "canvas";
     setNodeConfigJson((prev) => ({
       ...prev,
-      nodes: [...prev.nodes, newNode],
+      nodes: [
+        ...prev.nodes,
+        {
+          id: `n${prev.nodes.length + 1}`,
+          position: { x: 100, y: 100 },
+          data: { label: `Node ${prev.nodes.length + 1}` },
+        },
+      ],
     }));
-  }, [NodeConfigJson.nodes.length]);
-
-  const handleJsonEdit = (text) => {
-    try {
-      const parsed = JSON.parse(text);
-      console.log("Parsed JSON:", parsed);
-      setNodeConfigJson({
-        nodes: parsed.nodes ?? [],
-        edges: parsed.edges ?? [],
-      });
-    } catch {}
   };
-
-  if (!debouncedRef.current) {
-    debouncedRef.current = debounce(handleJsonEdit, 500);
-  }
 
   return (
     <div
@@ -134,15 +132,20 @@ export default function App() {
           padding: "10px",
         }}
       >
-        JSON Editor :
+        <strong>JSON Editor</strong>
         <pre
           ref={editorRef}
           contentEditable
           suppressContentEditableWarning
-          onInput={(e) => {
-            debouncedRef.current(e.currentTarget.innerText);
+          onFocus={() => (sourceRef.current = "editor")}
+          style={{
+            marginTop: 10,
+            minHeight: "90%",
+            border: "1px solid #333",
+            padding: 10,
+            outline: "none",
+            overflow: "auto",
           }}
-          style={{ border: "1px solid" }}
         />
       </div>
       <div style={{ width: "100%", height: "100%" }}>
@@ -168,7 +171,7 @@ export default function App() {
           alignItems: "center",
           border: "1px solid blues",
           top: "20px",
-          right: "200px",
+          right: "10%",
           zIndex: 10,
           width: "250px",
           padding: "5px",
