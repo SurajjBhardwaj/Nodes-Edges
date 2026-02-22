@@ -16,8 +16,10 @@ const nodeTypes = {
 };
 
 const NodePlayground = () => {
-  const { NodeConfigJson, setNodeConfigJson, selectedNode } = useNodeContext();
+  const { sourceRef, NodeConfigJson, setNodeConfigJson, selectedNode } =
+    useNodeContext();
   const onNodesChange = (changes) => {
+    sourceRef.current = "canvas";
     setNodeConfigJson((prev) => ({
       ...prev,
       nodes: applyNodeChanges(changes, prev.nodes),
@@ -25,6 +27,8 @@ const NodePlayground = () => {
   };
 
   const onEdgesChange = (changes) => {
+    sourceRef.current = "canvas";
+
     setNodeConfigJson((prev) => ({
       ...prev,
       edges: applyEdgeChanges(changes, prev.edges),
@@ -37,6 +41,8 @@ const NodePlayground = () => {
       return;
     }
 
+    sourceRef.current = "canvas";
+
     setNodeConfigJson((prev) => ({
       ...prev,
       edges: addEdge(params, prev.edges),
@@ -44,12 +50,14 @@ const NodePlayground = () => {
   };
 
   const handleAddNode = () => {
+    sourceRef.current = "canvas";
+
     setNodeConfigJson((prev) => ({
       ...prev,
       nodes: [
         ...prev.nodes,
         {
-          id: `n${prev.nodes.length + 1}`,
+          id: `${Date.now()}n${prev.nodes.length + 1}`,
           position: { x: 100, y: 100 },
           data: { label: `Node ${prev.nodes.length + 1}` },
         },

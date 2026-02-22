@@ -2,10 +2,9 @@ import { useEffect, useRef } from "react";
 import { useNodeContext } from "../NodeProvider.jsx";
 
 const JSONEditor = () => {
-  const { NodeConfigJson, setNodeConfigJson } = useNodeContext();
+  const { sourceRef, NodeConfigJson, setNodeConfigJson } = useNodeContext();
 
   const editorRef = useRef(null);
-  const sourceRef = useRef("canvas");
 
   const handleJsonEdit = (text) => {
     try {

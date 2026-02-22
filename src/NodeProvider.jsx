@@ -1,12 +1,13 @@
-import { createContext, useContext, useState } from "react";
-import { INITIAL_EDGES, INITIAL_NODES } from "./utils/constants";
+import { createContext, useContext, useRef, useState } from "react";
 
 const NodeContext = createContext(null);
 
 const NodeProviderComponent = ({ children }) => {
+  const sourceRef = useRef("canvas");
+
   const [NodeConfigJson, setNodeConfigJson] = useState({
-    nodes: INITIAL_NODES,
-    edges: INITIAL_EDGES,
+    nodes: [],
+    edges: [],
   });
   const [error, setError] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -36,6 +37,7 @@ const NodeProviderComponent = ({ children }) => {
     }
 
     setError(null);
+    sourceRef.current = "canvas";
 
     setNodeConfigJson((prevConfig) => ({
       ...prevConfig,
@@ -55,6 +57,7 @@ const NodeProviderComponent = ({ children }) => {
     handleNodeSelect,
     handleUpdateNodeName,
     error,
+    sourceRef,
   };
 
   return (
