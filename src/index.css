@@ -143,3 +143,23 @@ button:focus-visible {
   min-width: 100px;
   text-align: center;
 }
+
+.node-wrapper:hover {
+  .delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.delete-button {
+  display: none;
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  cursor: pointer;
+  align-items: center;
+}

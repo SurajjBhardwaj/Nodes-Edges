@@ -9,9 +9,20 @@ const NodeProviderComponent = ({ children }) => {
     edges: INITIAL_EDGES,
   });
 
+  const handleDeleteNode = (nodeId) => {
+    setNodeConfigJson((prevConfig) => ({
+      ...prevConfig,
+      nodes: prevConfig.nodes.filter((node) => node.id !== nodeId),
+      edges: prevConfig.edges.filter(
+        (edge) => edge.source !== nodeId && edge.target !== nodeId,
+      ),
+    }));
+  };
+
   const contextValues = {
     NodeConfigJson,
     setNodeConfigJson,
+    handleDeleteNode,
   };
 
   return (
