@@ -68,6 +68,7 @@ const NodePlayground = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView
+          proOptions={{ hideAttribution: true }}
         >
           <Background />
           <Controls />
