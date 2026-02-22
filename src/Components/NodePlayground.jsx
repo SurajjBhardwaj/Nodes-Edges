@@ -58,7 +58,7 @@ const NodePlayground = () => {
 
   return (
     <>
-      <div style={{ width: "100%", height: "100%" }}>
+      <div className="playground">
         <ReactFlow
           nodes={NodeConfigJson.nodes}
           edges={NodeConfigJson.edges}
@@ -72,62 +72,16 @@ const NodePlayground = () => {
           <Controls />
         </ReactFlow>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          border: "1px solid blues",
-          top: "20px",
-          right: "10%",
-          zIndex: 10,
-          width: "250px",
-          padding: "5px",
-        }}
-      >
+      <div className="playground-info-wrapper">
         <button onClick={handleAddNode}>Add Node</button>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "5px",
-            borderLeft: "1px solid black",
-            paddingLeft: "10px",
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              height: "10px",
-              width: "10px",
-              background: "red",
-              borderRadius: "50%",
-            }}
-          ></div>
+        <div className="playground-info-item-container">
+          <div className="playground-info-item bg-for-start"></div>
 
           <div>Start</div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "5px",
-            paddingLeft: "10px",
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              height: "10px",
-              width: "10px",
-              background: "#1a192b",
-              borderRadius: "50%",
-            }}
-          ></div>
+        <div className="playground-info-item-container ">
+          <div className="playground-info-item bg-for-end"></div>
 
           <div>END</div>
         </div>

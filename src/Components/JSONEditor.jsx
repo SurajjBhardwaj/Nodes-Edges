@@ -45,31 +45,14 @@ const JSONEditor = () => {
   }, [NodeConfigJson]);
 
   return (
-    <div
-      style={{
-        resize: "horizontal",
-        overflow: "auto",
-        width: "300px",
-        minWidth: "100px",
-        maxWidth: "500px",
-        border: "1px solid black",
-        padding: "10px",
-      }}
-    >
+    <div className="json-editor-wrapper">
       <strong>JSON Editor</strong>
       <pre
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning
         onFocus={() => (sourceRef.current = "editor")}
-        style={{
-          marginTop: 10,
-          minHeight: "90%",
-          border: "1px solid #333",
-          padding: 10,
-          outline: "none",
-          overflow: "auto",
-        }}
+        className="json-editor"
       />
     </div>
   );
