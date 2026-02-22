@@ -152,14 +152,52 @@ button:focus-visible {
   }
 }
 
+.node-actions {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
 .delete-button {
   display: none;
   height: 5px;
   width: 5px;
   border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  right: -5px;
   cursor: pointer;
   align-items: center;
+}
+
+.node-editor-sidebar {
+  position: absolute;
+  width: 400px;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  background-color: #333;
+  border-left: 1px solid #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.node-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .delete-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.node-editor-error-message {
+  color: red;
 }

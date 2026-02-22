@@ -1,8 +1,8 @@
 import { Handle, Position } from "@xyflow/react";
 import { useNodeContext } from "../NodeProvider";
 
-const DefaultNode = ({ data, id, selected }) => {
-  const { handleDeleteNode } = useNodeContext();
+const DefaultNode = ({ data, id }) => {
+  const { handleDeleteNode, handleNodeSelect } = useNodeContext();
   return (
     <div className="node-wrapper">
       <Handle type="target" position={Position.Top} />
@@ -15,9 +15,15 @@ const DefaultNode = ({ data, id, selected }) => {
         style={{ background: "red" }}
       />
 
-      <button className="delete-button" onClick={() => handleDeleteNode(id)}>
-        x
-      </button>
+      <div className="node-actions">
+        <button className="delete-button" onClick={() => handleDeleteNode(id)}>
+          x
+        </button>
+
+        <button className="delete-button" onClick={() => handleNodeSelect(id)}>
+          🖊️
+        </button>
+      </div>
     </div>
   );
 };

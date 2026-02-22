@@ -8,6 +8,8 @@ const NodeProviderComponent = ({ children }) => {
     nodes: INITIAL_NODES,
     edges: INITIAL_EDGES,
   });
+  const [error, setError] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
 
   const handleDeleteNode = (nodeId) => {
     setNodeConfigJson((prevConfig) => ({
@@ -19,10 +21,40 @@ const NodeProviderComponent = ({ children }) => {
     }));
   };
 
+  const handleNodeSelect = (nodeId) => {
+    setSelectedNode(nodeId);
+  };
+
+  const handleUpdateNodeName = (name) => {
+    if (name.trim() === "") {
+      setError("Node name cannot be empty.");
+      return;
+    }
+    if (name.length > 15) {
+      setError("Node name cannot exceed 15 characters.");
+      return;
+    }
+
+    setError(null);
+
+    setNodeConfigJson((prevConfig) => ({
+      ...prevConfig,
+      nodes: prevConfig.nodes.map((node) =>
+        node.id === selectedNode
+          ? { ...node, data: { ...node.data, label: name } }
+          : node,
+      ),
+    }));
+  };
+
   const contextValues = {
     NodeConfigJson,
     setNodeConfigJson,
     handleDeleteNode,
+    selectedNode,
+    handleNodeSelect,
+    handleUpdateNodeName,
+    error,
   };
 
   return (

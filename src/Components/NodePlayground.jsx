@@ -9,13 +9,14 @@ import {
 } from "@xyflow/react";
 import { useNodeContext } from "../NodeProvider.jsx";
 import DefaultNode from "./DefaultNode";
+import NodeEditorSidebar from "./NodeEditorSidebar.jsx";
 
 const nodeTypes = {
   default: DefaultNode,
 };
 
 const NodePlayground = () => {
-  const { NodeConfigJson, setNodeConfigJson } = useNodeContext();
+  const { NodeConfigJson, setNodeConfigJson, selectedNode } = useNodeContext();
   const onNodesChange = (changes) => {
     setNodeConfigJson((prev) => ({
       ...prev,
@@ -86,6 +87,8 @@ const NodePlayground = () => {
           <div>END</div>
         </div>
       </div>
+
+      {selectedNode && <NodeEditorSidebar id={selectedNode} />}
     </>
   );
 };
