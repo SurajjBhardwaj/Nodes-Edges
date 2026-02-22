@@ -44,9 +44,17 @@ const JSONEditor = () => {
     editorRef.current.innerText = JSON.stringify(NodeConfigJson, null, 2);
   }, [NodeConfigJson]);
 
+  const handleExport = () => {
+    navigator.clipboard.writeText(JSON.stringify(NodeConfigJson, null, 2));
+    alert("JSON copied to clipboard!");
+  };
+
   return (
     <div className="json-editor-wrapper">
-      <strong>JSON Editor</strong>
+      <div className="json-editor-header">
+        <strong>JSON Editor</strong>
+        <button onClick={handleExport}>Export</button>
+      </div>
       <pre
         ref={editorRef}
         contentEditable
