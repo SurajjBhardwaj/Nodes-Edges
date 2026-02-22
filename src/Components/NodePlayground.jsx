@@ -31,6 +31,11 @@ const NodePlayground = () => {
   };
 
   const onConnect = (params) => {
+    if (params.source === params.target) {
+      alert("Cannot connect a node to itself!");
+      return;
+    }
+
     setNodeConfigJson((prev) => ({
       ...prev,
       edges: addEdge(params, prev.edges),
